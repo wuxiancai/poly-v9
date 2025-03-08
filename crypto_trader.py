@@ -3861,6 +3861,14 @@ class CryptoTrader:
         self.continue_auto_find()
     
     def continue_auto_find(self):
+        # 如果已经处理过重启模式，跳过重启检查
+        if hasattr(self, 'restart_handled') and self.restart_handled:
+            self.restart_handled = False  # 重置标志，只跳过一次
+        elif self.check_restart():
+            self.logger.info("检测到重启模式,但已在auto_find_54_coin中处理,跳过重复检查")
+            # 设置标志表示已处理
+            self.restart_handled = True
+            
         if self.stop_auto_find or not self.running:
             self.auto_find_running = False
             self.logger.info("auto_find_54_coin已停止")
