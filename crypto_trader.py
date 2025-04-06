@@ -1435,6 +1435,7 @@ class CryptoTrader:
                 
             self.start_login_monitoring_running = True
             self.login_running = True
+            
             self.stop_auto_find_coin()
             self.stop_refresh_page()
             time.sleep(2)
@@ -1527,6 +1528,7 @@ class CryptoTrader:
                 time.sleep(2)
                 # 点击 "取消" 按钮
                 pyautogui.click(cancel_button_x, cancel_button_y)
+                self.login_running = False
                 self.refresh_page()
                 self.start_auto_find_coin()  
             
