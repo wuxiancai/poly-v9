@@ -1523,23 +1523,41 @@ class CryptoTrader:
         self.login_running = True
         try:
             # 等待输入框可交互
-            try:
-                amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT)
-            except Exception as e:
-                amount_input = self._find_element_with_retry(
-                    XPathConfig.AMOUNT_INPUT,
-                    timeout=3,
-                    silent=True
-                )
+            amount_input = None
+            retry_count = 0
+            max_retries = 5
+
+            while amount_input is None and retry_count < max_retries:
+                try:
+                    amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT)
+                    self.logger.info("成功找到金额输入框")
+                except Exception as e:
+                    retry_count += 1
+                    self.logger.warning(f"查找金额输入框失败 (尝试 {retry_count}/{max_retries}): {str(e)}")
+                    time.sleep(2)  # 等待2秒后重试
+                    try:
+                        amount_input = self._find_element_with_retry(
+                            XPathConfig.AMOUNT_INPUT,
+                            timeout=3,
+                            silent=True
+                        )
+                    except Exception:
+                        pass
             
-            # 清除现有输入并输入新值
-            amount_input.clear()
-            amount_input.send_keys("1")
-            time.sleep(1)
-            
-            # 点击确认按钮
-            self.buy_confirm_button.invoke()
-            time.sleep(1)
+            if amount_input is None:
+                self.logger.error("无法找到金额输入框，跳过输入步骤")
+                # 尝试直接点击确认按钮
+                self.buy_confirm_button.invoke()
+                time.sleep(1)
+            else:
+                # 清除现有输入并输入新值
+                amount_input.clear()
+                amount_input.send_keys("1")
+                time.sleep(1)
+                
+                # 点击确认按钮
+                self.buy_confirm_button.invoke()
+                time.sleep(1)
             
             # 获取屏幕尺寸
             monitor = get_monitors()[0]  # 获取主屏幕信息
