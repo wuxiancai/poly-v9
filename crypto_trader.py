@@ -1500,29 +1500,72 @@ class CryptoTrader:
         except Exception as e:
             self.logger.error(f"登录失败: {str(e)}")
 
-    def is_login_successful(self):
-        """检查登录是否成功"""
-        try:
-            # 获取Cash值
-            try:
-                cash_element = self.driver.find_element(By.XPATH, XPathConfig.CASH_VALUE)
-                cash_value = cash_element.text
-            except Exception as e:
-                cash_element = self._find_element_with_retry(XPathConfig.CASH_VALUE)
-                cash_value = cash_element.text
-            
-            if cash_value is not None:
-                self.logger.info(f"✅ 检测到CASH值: {cash_value}")
-                return True
-            else:
-                return False
-        except NoSuchElementException:
-            return False
-
     def click_accept_button(self):
         """重新登录后,需要在amount输入框输入1并确认"""
         self.logger.info("开始执行click_accept_button")
         self.login_running = True
+        try:
+            # 等待输入框可交互
+            try:
+                amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT)
+            except Exception as e:
+                amount_input = self._find_element_with_retry(
+                    XPathConfig.AMOUNT_INPUT,
+                    timeout=3,
+                    silent=True
+                )
+            
+            # 清除现有输入并输入新值
+            amount_input.clear()
+            amount_input.send_keys("1")
+            time.sleep(1)
+            
+            # 点击确认按钮
+            self.buy_confirm_button.invoke()
+            time.sleep(1)
+            
+            # 获取屏幕尺寸
+            monitor = get_monitors()[0]  # 获取主屏幕信息
+            screen_width, screen_height = monitor.width, monitor.height
+            time.sleep(1)
+
+            # 截取屏幕右上角区域用于OCR识别
+            # 区域参数格式为(left, top, width, height)
+            # 截图区域从上往下(0,870),从右往左(0,870),
+            right_top_region = (screen_width - 870, 0, 870, 870)  
+            screen = pyautogui.screenshot(region=right_top_region)
+            
+            time.sleep(2)
+            # 使用OCR识别文本
+            text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
+            time.sleep(3)
+
+            if "Accept" in text_chi_sim:
+                self.logger.info("检测到MetaMask弹窗,显示'Accept'")
+                # 点击 "Accept" 按钮
+                pyautogui.press('enter')
+                self.logger.info("✅ click_accept_button执行完成")
+                self.refresh_page()
+                self.start_auto_find_coin()
+                self.click_accept_button_again()
+            else:
+                self.logger.info("没有 ACCEPT 按钮")
+                # 计算 "取消" 按钮位置
+                cancel_button_x = screen_width - 170  # 同样靠右对齐
+                cancel_button_y = 605  # "确认" 按钮通常在下方
+                time.sleep(2)
+                # 点击 "取消" 按钮
+                pyautogui.click(cancel_button_x, cancel_button_y)
+                self.refresh_page()
+                self.start_auto_find_coin()  
+            
+        except Exception as e:
+            self.logger.error(f"click_accept_button执行失败: {str(e)}")
+            
+        finally:
+            self.login_running = False
+    def click_accept_button_again(self):
+        self.logger.info("再次执行click_accept_button")
         try:
             # 等待输入框可交互
             try:
