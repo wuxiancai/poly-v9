@@ -818,7 +818,7 @@ class CryptoTrader:
         # 启动URL监控
         self.root.after(4000, self.start_url_monitoring)
         # 启动自动找币
-        self.root.after(1800000, self.start_auto_find_coin)
+        self.root.after(180000, self.start_auto_find_coin)
     
     def _start_browser_monitoring(self, new_url):
         """在新线程中执行浏览器操作"""
@@ -958,8 +958,13 @@ class CryptoTrader:
             self.logger.info("已在新终端中启动Chrome浏览器")
             # 等待Chrome启动
             time.sleep(5)
-            self.driver.get(self.target_url)
+            target_url = self.url_entry.get()
+            self.driver.get(target_url)
             time.sleep(1)
+            if not self.find_login_button():
+                self.logger.info("已登录")
+                return
+
             # 点击登录按钮
             try:
                 login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON)
@@ -973,52 +978,15 @@ class CryptoTrader:
                 login_button.click()
             time.sleep(1)
             
-            # 使用 XPath 定位并点击 MetaMask 按钮
-            metamask_button = self._find_element_with_retry(XPathConfig.METAMASK_BUTTON)
-            metamask_button.click()
+            # 使用 XPath 定位并点击 google 按钮
+            google_button = self._find_element_with_retry(XPathConfig.LOGIN_WITH_GOOGLE_BUTTON)
+            google_button.click()
+            time.sleep(5)
+
+            self.driver.get(target_url)
             time.sleep(2)
-
-            # 获取屏幕尺寸
-            monitor = get_monitors()[0]  # 获取主屏幕信息
-            screen_width, screen_height = monitor.width, monitor.height
-            time.sleep(1)
-            # 截取屏幕右上角区域用于OCR识别
-            # 区域参数格式为(left, top, width, height)
-            right_top_region = (screen_width - 400, 0, 400, 605)  # 右上角500x700像素区域
-            screen = pyautogui.screenshot(region=right_top_region)
-            time.sleep(2)
-            # 使用OCR识别文本
-            text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
-            time.sleep(3)
-
-            # 检查是否包含"欢迎回来!"
-            if "欢迎" in text_chi_sim or "回来" in text_chi_sim :
-                self.logger.info("检测到MetaMask登录窗口,显示'欢迎回来!'")
-                # 输入密码
-                pyautogui.write("noneboy780308")
-                time.sleep(1)
-                # 按下Enter键
-                pyautogui.press('enter')
-                time.sleep(3)
-                
-                """屏幕分辨率必须设置为 1920*1080"""
-                # 计算 MetaMask 弹窗的 "连接" 按钮位置
-                connect_button_x = screen_width - 95  # 按钮位于屏幕右侧，稍微向左偏移范围 92-120
-                connect_button_y = 610  # 观察图片后估算按钮的Y坐标,范围 590-620
-                time.sleep(2)
-                # 点击 "连接" 按钮
-                pyautogui.click(connect_button_x, connect_button_y) 
-                
-                # 计算 "确认" 按钮位置
-                confirm_button_x = screen_width - 95  # 同样靠右对齐
-                confirm_button_y = 610  # "确认" 按钮通常在下方
-                time.sleep(2)
-                # 点击 "确认" 按钮
-                pyautogui.click(confirm_button_x, confirm_button_y) 
-
-                self.logger.info("MetaMask登录成功")
-                time.sleep(1)
-
+            
+            self.click_accept_button()
             self.start_url_monitoring()
             self.start_login_monitoring()
             self.refresh_page()
@@ -1500,11 +1468,10 @@ class CryptoTrader:
         except Exception as e:
             self.logger.error(f"登录失败: {str(e)}")
         
-
     def click_accept_button(self):
         """重新登录后,需要在amount输入框输入1并确认"""
         self.logger.info("开始执行click_accept_button")
-        self.login_running = True
+        
         try:
             # 等待输入框可交互
             try:
@@ -1546,6 +1513,7 @@ class CryptoTrader:
                 # 点击 "Accept" 按钮
                 pyautogui.press('enter')
                 self.logger.info("✅ click_accept_button执行完成")
+                self.login_running = False
                 self.refresh_page()
                 self.start_auto_find_coin()
                 
@@ -1562,9 +1530,6 @@ class CryptoTrader:
             
         except Exception as e:
             self.logger.error(f"click_accept_button执行失败: {str(e)}")
-            
-        finally:
-            self.login_running = False
 
     # 添加刷新方法
     def refresh_page(self):
