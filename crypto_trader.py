@@ -961,36 +961,38 @@ class CryptoTrader:
             target_url = self.url_entry.get()
             self.driver.get(target_url)
             time.sleep(1)
+            
             if not self.find_login_button():
                 self.logger.info("已登录")
-                return
+            else:
+                self.logger.info("未登录,开始登录")
 
-            # 点击登录按钮
-            try:
-                login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON)
-                login_button.click()
-            except Exception as e:
-                login_button = self._find_element_with_retry(
-                    XPathConfig.LOGIN_BUTTON,
-                    timeout=3,
-                    silent=True
-                )
-                login_button.click()
-            time.sleep(1)
-            
-            # 使用 XPath 定位并点击 google 按钮
-            google_button = self._find_element_with_retry(XPathConfig.LOGIN_WITH_GOOGLE_BUTTON)
-            google_button.click()
-            time.sleep(5)
+                # 点击登录按钮
+                try:
+                    login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON)
+                    login_button.click()
+                except Exception as e:
+                    login_button = self._find_element_with_retry(
+                        XPathConfig.LOGIN_BUTTON,
+                        timeout=3,
+                        silent=True
+                    )
+                    login_button.click()
+                time.sleep(1)
+                
+                # 使用 XPath 定位并点击 google 按钮
+                google_button = self._find_element_with_retry(XPathConfig.LOGIN_WITH_GOOGLE_BUTTON)
+                google_button.click()
+                time.sleep(5)
 
-            self.driver.get(target_url)
-            time.sleep(2)
-            
-            self.click_accept_button()
-            self.start_url_monitoring()
-            self.start_login_monitoring()
-            self.refresh_page()
-            self.start_auto_find_coin()
+                self.driver.get(target_url)
+                time.sleep(2)
+
+                self.click_accept_button()
+                self.start_url_monitoring()
+                self.start_login_monitoring()
+                self.refresh_page()
+                self.start_auto_find_coin()
         except Exception as e:
             self.logger.error(f"自动修复失败: {e}")
         
