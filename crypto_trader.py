@@ -1511,10 +1511,10 @@ class CryptoTrader:
             time.sleep(3)
 
             if "Accept" in text_chi_sim:
-                self.logger.info("检测到MetaMask弹窗,显示'Accept'")
+                self.logger.info("检测到ACCEPT弹窗")
                 # 点击 "Accept" 按钮
                 pyautogui.press('enter')
-                self.logger.info("✅ click_accept_button执行完成")
+                self.logger.info("✅ 点击accept完成")
                 self.login_running = False
                 self.refresh_page()
                 self.start_auto_find_coin()
@@ -1539,12 +1539,21 @@ class CryptoTrader:
         with self.refresh_page_lock:
             self.refresh_page_running = True
             try:
+                # 先取消可能存在的旧定时器
+                if hasattr(self, 'refresh_page_timer') and self.refresh_page_timer:
+                    try:
+                        self.root.after_cancel(self.refresh_page_timer)
+                        self.refresh_page_timer = None
+                    except Exception as e:
+                        self.logger.error(f"取消旧定时器失败: {str(e)}")
+
                 if self.running and self.driver and not self.trading:
                     self.driver.refresh()
                     self.logger.info(f"✅ 定时刷新成功")      
                 else:
                     self.logger.info("刷新失败")
                     self.logger.info(f"trading={self.trading}")
+                    
             except Exception as e:
                 self.logger.error(f"页面刷新失败")
                 # 无论是否执行刷新都安排下一次（确保循环持续）
