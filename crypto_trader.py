@@ -1489,8 +1489,7 @@ class CryptoTrader:
 
             if not self.find_login_button():
                 self.logger.info("✅ 登录成功")
-                
-                time.sleep(6)
+                self.login_running = False
                 self.click_accept_button()
             else:
                 self.logger.warning("登录失败,等待2秒后重试")
@@ -1499,6 +1498,7 @@ class CryptoTrader:
                 
         except Exception as e:
             self.logger.error(f"登录失败: {str(e)}")
+        
 
     def click_accept_button(self):
         """重新登录后,需要在amount输入框输入1并确认"""
@@ -1564,6 +1564,7 @@ class CryptoTrader:
             
         finally:
             self.login_running = False
+            
     def click_accept_button_again(self):
         self.logger.info("再次执行click_accept_button")
         try:
