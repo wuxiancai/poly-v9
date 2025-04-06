@@ -1484,7 +1484,8 @@ class CryptoTrader:
             google_button = self._find_element_with_retry(XPathConfig.LOGIN_WITH_GOOGLE_BUTTON)
             google_button.click()
             time.sleep(8)
-            if self.is_login_successful() and self.find_login_button():
+
+            if self.is_login_successful() and not self.find_login_button():
                 self.logger.info("✅ 登录成功")
                 self.click_accept_button()
             else:
@@ -1629,7 +1630,7 @@ class CryptoTrader:
         # 截图区域从上往下(0,870),从右往左(0,870),
         right_top_region = (screen_width - 870, 0, 870, 870)  
         screen = pyautogui.screenshot(region=right_top_region)
-        
+        screen.save("screen.png")
         time.sleep(1)
         # 使用OCR识别文本
         text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
