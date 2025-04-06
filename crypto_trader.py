@@ -1309,6 +1309,7 @@ class CryptoTrader:
             if getattr(self, 'is_url_monitoring', False):
                 self.logger.debug("URL监控已在运行中")
                 return
+            
             if not self.driver:
                 self.restart_browser()
 
@@ -1320,10 +1321,12 @@ class CryptoTrader:
                     try:
                         current_page_url = self.driver.current_url
                         target_url = self.target_url
+
                         if current_page_url != target_url:
                             self.logger.warning("检测到URL变化,正在恢复...")
                             self.driver.get(target_url)
                             self.logger.info("✅ 已恢复到正确的监控网址")
+
                     except Exception as e:
                         self.logger.error(f"URL监控出错: {str(e)}")
                         # 重新导航到目标URL
@@ -1332,7 +1335,7 @@ class CryptoTrader:
                             self.logger.info("✅ URL监控已自动修复")
                     # 继续监控
                     if self.running:
-                        self.url_check_timer = self.root.after(3000, check_url)  # 每3秒检查一次
+                        self.url_check_timer = self.root.after(2000, check_url)  # 每3秒检查一次
             
             # 开始第一次检查
             self.url_check_timer = self.root.after(1000, check_url)
@@ -1463,9 +1466,8 @@ class CryptoTrader:
             self.start_login_monitoring_running = True
             self.login_running = True
             self.stop_auto_find_coin()
-           
             self.stop_refresh_page()
-            time.sleep(5)
+            time.sleep(2)
             
             # 点击登录按钮
             try:
@@ -1483,12 +1485,12 @@ class CryptoTrader:
             # 使用 XPath 定位并点击 google 按钮
             google_button = self._find_element_with_retry(XPathConfig.LOGIN_WITH_GOOGLE_BUTTON)
             google_button.click()
-            time.sleep(8)
+            time.sleep(2)
 
-            if self.is_login_successful() and not self.find_login_button():
+            if not self.find_login_button():
                 self.logger.info("✅ 登录成功")
                 
-                time.sleep(5)
+                time.sleep(6)
                 self.click_accept_button()
             else:
                 self.logger.warning("登录失败,等待2秒后重试")
@@ -1523,43 +1525,23 @@ class CryptoTrader:
         self.login_running = True
         try:
             # 等待输入框可交互
-            amount_input = None
-            retry_count = 0
-            max_retries = 5
-
-            while amount_input is None and retry_count < max_retries:
-                try:
-                    amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT)
-                    self.logger.info("成功找到金额输入框")
-                except Exception as e:
-                    retry_count += 1
-                    self.logger.warning(f"查找金额输入框失败 (尝试 {retry_count}/{max_retries}): {str(e)}")
-                    time.sleep(2)  # 等待2秒后重试
-                    try:
-                        # 确保XPath是字符串类型
-                        xpath = str(XPathConfig.AMOUNT_INPUT)
-                        amount_input = self._find_element_with_retry(
-                            xpath,
-                            timeout=3,
-                            silent=True
-                        )
-                    except Exception:
-                        pass
+            try:
+                amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT)
+            except Exception as e:
+                amount_input = self._find_element_with_retry(
+                    XPathConfig.AMOUNT_INPUT,
+                    timeout=3,
+                    silent=True
+                )
             
-            if amount_input is None:
-                self.logger.error("无法找到金额输入框，跳过输入步骤")
-                # 尝试直接点击确认按钮
-                self.buy_confirm_button.invoke()
-                time.sleep(1)
-            else:
-                # 清除现有输入并输入新值
-                amount_input.clear()
-                amount_input.send_keys("1")
-                time.sleep(1)
-                
-                # 点击确认按钮
-                self.buy_confirm_button.invoke()
-                time.sleep(1)
+            # 清除现有输入并输入新值
+            amount_input.clear()
+            amount_input.send_keys("1")
+            time.sleep(1)
+            
+            # 点击确认按钮
+            self.buy_confirm_button.invoke()
+            time.sleep(1)
             
             # 获取屏幕尺寸
             monitor = get_monitors()[0]  # 获取主屏幕信息
