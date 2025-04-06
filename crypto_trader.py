@@ -818,7 +818,7 @@ class CryptoTrader:
         # 启动URL监控
         self.root.after(4000, self.start_url_monitoring)
         # 启动自动找币
-        self.root.after(180000, self.start_auto_find_coin)
+        self.root.after(1800000, self.start_auto_find_coin)
     
     def _start_browser_monitoring(self, new_url):
         """在新线程中执行浏览器操作"""
@@ -1630,10 +1630,10 @@ class CryptoTrader:
         right_top_region = (screen_width - 870, 0, 870, 870)  
         screen = pyautogui.screenshot(region=right_top_region)
         
-        time.sleep(2)
+        time.sleep(1)
         # 使用OCR识别文本
         text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
-        time.sleep(3)
+        time.sleep(2)
 
         if "Accept" in text_chi_sim:
             self.logger.info("检测到MetaMask弹窗,显示'Accept'")
@@ -1692,6 +1692,7 @@ class CryptoTrader:
                         
                         # 执行等待和刷新
                         self.sleep_refresh("First_trade")
+
                         if self.Verify_buy_yes():
                             # 增加交易次数
                             self.trade_count += 1
