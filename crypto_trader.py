@@ -1463,7 +1463,7 @@ class CryptoTrader:
             self.start_login_monitoring_running = True
             self.login_running = True
             self.stop_auto_find_coin()
-            self.stop_url_monitoring()
+           
             self.stop_refresh_page()
             time.sleep(5)
             
@@ -1487,6 +1487,8 @@ class CryptoTrader:
 
             if self.is_login_successful() and not self.find_login_button():
                 self.logger.info("✅ 登录成功")
+                
+                time.sleep(5)
                 self.click_accept_button()
             else:
                 self.logger.warning("登录失败,等待2秒后重试")
@@ -1560,18 +1562,17 @@ class CryptoTrader:
                 # 点击 "Accept" 按钮
                 pyautogui.press('enter')
                 self.logger.info("✅ click_accept_button执行完成")
+                self.refresh_page()
+                self.start_auto_find_coin()
             else:
                 # 计算 "取消" 按钮位置
                 cancel_button_x = screen_width - 170  # 同样靠右对齐
                 cancel_button_y = 605  # "确认" 按钮通常在下方
                 time.sleep(2)
                 # 点击 "取消" 按钮
-                pyautogui.click(cancel_button_x, cancel_button_y)  
-            
-            # 启动URL监控    
-            self.start_url_monitoring()
-            # 启动页面刷新
-            self.refresh_page()
+                pyautogui.click(cancel_button_x, cancel_button_y)
+                self.refresh_page()
+                self.start_auto_find_coin()  
             
         except Exception as e:
             self.logger.error(f"click_accept_button执行失败: {str(e)}")
