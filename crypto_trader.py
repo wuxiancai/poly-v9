@@ -1685,10 +1685,11 @@ class CryptoTrader:
                         self.amount_yes1_button.event_generate('<Button-1>')
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
-                        self.is_accept()
-                        self.buy_confirm_button.invoke()
+                        if not self.is_accept():
+                            pass
+                        
                         time.sleep(0.5)
-                        self._handle_metamask_popup()
+                        
                         # 执行等待和刷新
                         self.sleep_refresh("First_trade")
                         if self.Verify_buy_yes():
@@ -1739,10 +1740,9 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        self.is_accept()
-                        self.buy_confirm_button.invoke()
+                        if not self.is_accept():
+                            pass
                         
-                        self._handle_metamask_popup()
                         # 执行等待和刷新
                         self.sleep_refresh("First_trade")
 
@@ -1833,9 +1833,9 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        self.is_accept()
-                        self.buy_confirm_button.invoke()
-                        self._handle_metamask_popup()
+                        if not self.is_accept():
+                            pass
+                        
                         # 执行等待和刷新
                         self.sleep_refresh("Second_trade")
                         if self.Verify_buy_yes():
@@ -1878,9 +1878,9 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        self.is_accept()
-                        self.buy_confirm_button.invoke()
-                        self._handle_metamask_popup()
+                        if not self.is_accept():
+                            pass
+                        
                         # 执行等待和刷新
                         self.sleep_refresh("Second_trade")
                         if self.Verify_buy_no():
@@ -1962,9 +1962,9 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        self.is_accept()
-                        self.buy_confirm_button.invoke()
-                        self._handle_metamask_popup()
+                        if not self.is_accept():
+                            pass
+                        
                         # 执行等待和刷新
                         self.sleep_refresh("Third_trade")
                         if self.Verify_buy_yes():
@@ -2006,9 +2006,9 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        self.is_accept()
-                        self.buy_confirm_button.invoke()
-                        self._handle_metamask_popup()
+                        if not self.is_accept():
+                            pass
+                        
                         # 执行等待和刷新
                         self.sleep_refresh("Third_trade")
                         if self.Verify_buy_no():
@@ -2090,9 +2090,9 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        self.is_accept()
-                        self.buy_confirm_button.invoke()
-                        self._handle_metamask_popup()
+                        if not self.is_accept():
+                            pass
+                        
                         # 执行等待和刷新
                         self.sleep_refresh("Forth_trade")
                         if self.Verify_buy_yes():
@@ -2138,9 +2138,9 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        self.is_accept()
-                        self.buy_confirm_button.invoke()
-                        self._handle_metamask_popup()
+                        if not self.is_accept():
+                            pass
+                        
                         # 执行等待和刷新
                         self.sleep_refresh("Forth_trade")
                         if self.Verify_buy_no():
@@ -2349,8 +2349,10 @@ class CryptoTrader:
         self.position_sell_yes_button.invoke()
         time.sleep(0.5)
         self.sell_profit_button.invoke()
-        self.is_accept()
-        self.sell_profit_button.invoke()
+        if not self.is_accept():
+            pass
+
+        
         self.sleep_refresh("only_sell_yes")
 
         if self.Verify_sold_yes():
@@ -2396,8 +2398,10 @@ class CryptoTrader:
         self.position_sell_no_button.invoke()
         time.sleep(0.5)
         self.sell_profit_button.invoke()
-        self.is_accept()
-        self.sell_profit_button.invoke()
+        if not self.is_accept():
+            pass
+
+        
         # 执行等待和刷新
         self.sleep_refresh("only_sell_no")
         
