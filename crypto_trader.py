@@ -1536,8 +1536,10 @@ class CryptoTrader:
                     self.logger.warning(f"查找金额输入框失败 (尝试 {retry_count}/{max_retries}): {str(e)}")
                     time.sleep(2)  # 等待2秒后重试
                     try:
+                        # 确保XPath是字符串类型
+                        xpath = str(XPathConfig.AMOUNT_INPUT)
                         amount_input = self._find_element_with_retry(
-                            XPathConfig.AMOUNT_INPUT,
+                            xpath,
                             timeout=3,
                             silent=True
                         )
