@@ -814,9 +814,9 @@ class CryptoTrader:
         # 启动页面刷新
         self.root.after(40000, self.refresh_page)
         # 启动登录状态监控
-        self.root.after(2000, self.start_login_monitoring)
+        self.root.after(8000, self.start_login_monitoring)
         # 启动URL监控
-        self.root.after(30000, self.start_url_monitoring)
+        self.root.after(4000, self.start_url_monitoring)
         # 启动自动找币
         self.root.after(180000, self.start_auto_find_coin)
     
