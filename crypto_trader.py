@@ -935,7 +935,7 @@ class CryptoTrader:
     def restart_browser(self):
         # 自动修复: 尝试重新连接浏览器
         try:
-            self.logger.info("正在尝试自动修复URL监控...")
+            self.logger.info("正在尝试自动修复CHROME浏览器...")
             
             # 获取当前脚本的完整路径
             script_path = os.path.abspath('start_chrome.sh')
@@ -948,9 +948,7 @@ class CryptoTrader:
             self.driver.get(target_url)
             time.sleep(1)
             
-            if not self.find_login_button():
-                self.logger.info("已登录")
-            else:
+            if self.find_login_button():
                 self.logger.info("未登录,开始登录")
 
                 # 点击登录按钮
@@ -2140,7 +2138,7 @@ class CryptoTrader:
         """当YES5价格等于实时Yes价格时自动卖出"""
         try:
             if not self.driver:
-                raise Exception("浏览器连接丢失")
+                self.restart_browser()
                 
             # 获取当前Yes价格
             prices = self.driver.execute_script("""
@@ -2182,7 +2180,7 @@ class CryptoTrader:
                             self.only_sell_no()
                         else:
                             pass
-                        
+
                         # 重置所有价格
                         for i in range(1,6):  # 1-5
                             yes_entry = getattr(self, f'yes{i}_price_entry', None)
@@ -2211,7 +2209,7 @@ class CryptoTrader:
         """当NO4价格等于实时No价格时自动卖出"""
         try:
             if not self.driver:
-                raise Exception("浏览器连接丢失")   
+                self.restart_browser()  
             # 获取当前No价格
             prices = self.driver.execute_script("""
                 function getPrices() {
@@ -2424,8 +2422,8 @@ class CryptoTrader:
         """点击 Positions-Sell-No 按钮"""
         try:
             if not self.driver:
-                self.update_status("请先连接浏览器")
-                return
+                self.restart_browser()
+
             # 等待页面加载完成
             WebDriverWait(self.driver, 10).until(
                 lambda driver: driver.execute_script('return document.readyState') == 'complete'
@@ -2465,8 +2463,8 @@ class CryptoTrader:
         """点击 Positions-Sell-Yes 按钮"""
         try:
             if not self.driver:
-                self.update_status("请先连接浏览器")
-                return
+                self.restart_browser()
+
             # 等待页面加载完成
             WebDriverWait(self.driver, 10).until(
                 lambda driver: driver.execute_script('return document.readyState') == 'complete'
@@ -2506,8 +2504,7 @@ class CryptoTrader:
         """点击sell-卖出按钮"""
         try:
             if not self.driver:
-                self.update_status("请先连接浏览器")
-                return
+                self.restart_browser()
             # 点击Sell-卖出按钮
             try:
                 sell_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.SELL_CONFIRM_BUTTON)
@@ -2527,8 +2524,7 @@ class CryptoTrader:
     def click_buy(self):
         try:
             if not self.driver:
-                self.update_status("请先连接浏览器")
-                return
+                self.restart_browser()
             try:
                 button = self.driver.find_element(By.XPATH, XPathConfig.BUY_BUTTON)
             except Exception as e:
@@ -2547,8 +2543,7 @@ class CryptoTrader:
         """点击 Buy-Yes 按钮"""
         try:
             if not self.driver:
-                self.update_status("请先连接浏器")
-                return
+                self.restart_browser()
             
             try:
                 button = self.driver.find_element(By.XPATH, XPathConfig.BUY_YES_BUTTON)
@@ -2568,8 +2563,7 @@ class CryptoTrader:
         """点击 Buy-No 按钮"""
         try:
             if not self.driver:
-                self.update_status("请先连接浏览器")
-                return
+                self.restart_browser()
             try:
                 button = self.driver.find_element(By.XPATH, XPathConfig.BUY_NO_BUTTON)
             except Exception as e:
@@ -2588,8 +2582,7 @@ class CryptoTrader:
         """点击 Amount 按钮并输入数量"""
         try:
             if not self.driver:
-                self.update_status("请先连接浏览器")
-                return         
+                self.restart_browser()
             
             # 获取触发事件的按钮
             button = event.widget if event else self.amount_button
@@ -2650,9 +2643,7 @@ class CryptoTrader:
         try:
             # 首先验证浏览器状态
             if not self.driver:
-                self.logger.error("浏览器连接已断开")
-                return False
-            # 等待并检查是否存在 Yes 标签
+                self.restart_browser()            # 等待并检查是否存在 Yes 交易记录
             try:
                 yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
             except Exception as e:
@@ -2686,8 +2677,7 @@ class CryptoTrader:
         try:
             # 首先验证浏览器状态
             if not self.driver:
-                self.logger.error("浏览器连接已断开")
-                return False
+                self.restart_browser()
             # 等待并检查是否存在 No 标签
             try:
                 no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
@@ -2753,9 +2743,7 @@ class CryptoTrader:
         try:
             # 首先验证浏览器状态
             if not self.driver:
-                self.logger.error("浏览器连接已断开")
-                return False
-            # 等待并检查是否存在 Yes 标签
+                self.restart_browser()            # 等待并检查是否存在 Yes 交易记录
             try:
                 yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
             except Exception as e:
@@ -2789,9 +2777,7 @@ class CryptoTrader:
         try:
             # 首先验证浏览器状态
             if not self.driver:
-                self.logger.error("浏览器连接已断开")
-                return False
-            # 等待并检查是否存在 No 标签
+                self.restart_browser()            # 等待并检查是否存在 No 交易记录
             try:
                 no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
             except Exception as e:
@@ -3042,8 +3028,7 @@ class CryptoTrader:
         for attempt in range(max_retries):
             try:
                 if not self.driver:
-                    self.update_status("find_position_label_yes请先连接浏览器")
-                    return None
+                    self.restart_browser()
                     
                 # 等待页面加载完成
                 WebDriverWait(self.driver, 10).until(
@@ -3089,8 +3074,7 @@ class CryptoTrader:
         for attempt in range(max_retries):
             try:
                 if not self.driver:
-                    self.update_status("find_position_label_no请先连接浏览器")
-                    return None
+                    self.restart_browser()
                     
                 # 等待页面加载完成
                 WebDriverWait(self.driver, 10).until(
