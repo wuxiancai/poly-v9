@@ -51,13 +51,11 @@ class XPathConfig:
     BUY_CONFIRM_BUTTON = [
         '//button[@class="c-bDcLpV c-bDcLpV-fLyPyt-color-blue c-bDcLpV-ileGDsu-css"]',
         '//button[.//span[contains(text(), "B")] and .//span[contains(text(), "u")] and .//span[contains(text(), "y")] and .//span[contains(text(), "Y")] and .//span[contains(text(), "e")] and .//span[contains(text(), "s")]]',
-        '//button[.//span[contains(text(), "B")] and .//span[contains(text(), "u")] and .//span[contains(text(), "y")] and .//span[contains(text(), "N")] and .//span[contains(text(), "o")]',
-        '//button[contains(text(), "Buy Yes") or contains(text(), "Buy No")]',
-        '//button[contains(text(), "Buy" and contains(text(), "Yes")) or contains(text(), "Buy" and contains(text(), "No"))]'
-    ]
+        '//button[.//span[contains(text(), "B")] and .//span[contains(text(), "u")] and .//span[contains(text(), "y")] and .//span[contains(text(), "N")] and .//span[contains(text(), "o")]'
+        ]
 
     # 9.Sell-卖出按钮
-    SELL_PROFIT_BUTTON = [
+    SELL_CONFIRM_BUTTON = [
         '//button[@class="c-bDcLpV c-bDcLpV-fLyPyt-color-blue c-bDcLpV-ileGDsu-css"]',
         '/html/body/div[1]/div[2]/div/div/div/div/div/div[1]/div[3]/div[2]/div/span/button',
         '//button[.//span[contains(text(), "S")] and .//span[contains(text(), "e")] and .//span[contains(text(), "l")] and .//span[contains(text(), "l")]and .//span[contains(text(), "N")] and .//span[contains(text(), "o")]',

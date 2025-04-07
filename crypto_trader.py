@@ -100,6 +100,8 @@ class CryptoTrader:
         self.refresh_page_timer = None  # 用于存储定时器ID
         self.url_check_timer = None
         self.auto_find_coin_timer = None
+        # 添加登录状态监控定时器
+        self.login_check_timer = None
 
         # 添加URL and refresh_page监控锁
         self.url_monitoring_lock = threading.Lock()
@@ -110,7 +112,7 @@ class CryptoTrader:
         # 在初始化部分添加
         self.stop_event = threading.Event()
         # 初始化金额属性
-        for i in range(1, 4):  # 1到3
+        for i in range(1, 4):  # 1到4
             setattr(self, f'yes{i}_amount', 0.0)
             setattr(self, f'no{i}_amount', 0.0)
 
@@ -141,9 +143,6 @@ class CryptoTrader:
             self.logger.info("检测到重启模式,安排自动点击开始按钮！")
             self.root.after(10000, self.auto_start_monitor)
       
-        # 添加登录状态监控定时器
-        self.login_check_timer = None
-
     def load_config(self):
         """加载配置文件，保持默认格式"""
         try:
@@ -249,7 +248,7 @@ class CryptoTrader:
             self.logger.error(f"保存配置失败: {str(e)}")
             raise
 
-    """从这里开始设置 GUI 直到 784 行"""
+    """从这里开始设置 GUI 直到 771 行"""
     def setup_gui(self):
         self.root = tk.Tk()
         self.root.title("Polymarket automatic trading")
@@ -415,7 +414,7 @@ class CryptoTrader:
             settings_container.grid_columnconfigure(i, weight=1)
 
         """设置窗口大小和位置"""
-        window_width = 470
+        window_width = 475
         window_height = 800
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
@@ -429,7 +428,7 @@ class CryptoTrader:
         ttk.Label(url_frame, text="WEB:", font=('Arial', 10)).grid(row=0, column=0, padx=5, pady=5)
         
         # 创建下拉列和输入框组合控件
-        self.url_entry = ttk.Combobox(url_frame, width=40)
+        self.url_entry = ttk.Combobox(url_frame, width=46)
         self.url_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
         
         # 从配置文件加载历史记录
@@ -752,22 +751,9 @@ class CryptoTrader:
                                                 command=self.click_position_sell_no)
         self.position_sell_no_button.grid(row=0, column=1, padx=2, pady=5)
 
-        self.sell_profit_button = ttk.Button(button_frame, text="Sell-profit", width=10,
-                                           command=self.click_profit_sell)
-        self.sell_profit_button.grid(row=0, column=2, padx=2, pady=5)
-
-        # 第二行按钮
-        self.sell_yes_button = ttk.Button(button_frame, text="Sell-Yes", width=10,
-                                        command=self.click_sell_yes)
-        self.sell_yes_button.grid(row=1, column=0, padx=2, pady=5)
-
-        self.sell_no_button = ttk.Button(button_frame, text="Sell-No", width=10,
-                                       command=self.click_sell_no)
-        self.sell_no_button.grid(row=1, column=1, padx=2, pady=5)
-
-        self.restart_program_button = ttk.Button(button_frame, text="Restart", width=6,
-                                                 command=self.restart_program)
-        self.restart_program_button.grid(row=1, column=2, padx=2, pady=5)
+        self.sell_confirm_button = ttk.Button(button_frame, text="Sell-confirm", width=10,
+                                           command=self.click_sell_confirm_button)
+        self.sell_confirm_button.grid(row=0, column=2, padx=2, pady=5)
 
         # 配置列权重使按钮均匀分布
         for i in range(4):
@@ -782,7 +768,7 @@ class CryptoTrader:
         copyright_label = ttk.Label(scrollable_frame, text="Powered by 无为 Copyright 2024",
                                    font=('Arial', 12), foreground='gray')
         copyright_label.pack(pady=(0, 5))  # 上边距0，下距5
-    """以上代码从240行到 784 行是设置 GUI 界面的"""
+    """以上代码从240行到 771 行是设置 GUI 界面的"""
 
     """以下代码从 785 行到行是程序交易逻辑"""
     def start_monitoring(self):
@@ -1305,7 +1291,7 @@ class CryptoTrader:
                             self.logger.info("✅ URL监控已自动修复")
                     # 继续监控
                     if self.running:
-                        self.url_check_timer = self.root.after(2000, check_url)  # 每3秒检查一次
+                        self.url_check_timer = self.root.after(3000, check_url)  # 每3秒检查一次
             
             # 开始第一次检查
             self.url_check_timer = self.root.after(1000, check_url)
@@ -1435,7 +1421,7 @@ class CryptoTrader:
                 
             self.start_login_monitoring_running = True
             self.login_running = True
-            
+
             self.stop_auto_find_coin()
             self.stop_refresh_page()
             time.sleep(2)
@@ -1515,7 +1501,7 @@ class CryptoTrader:
                 self.logger.info("检测到ACCEPT弹窗")
                 # 点击 "Accept" 按钮
                 pyautogui.press('enter')
-                self.logger.info("✅ 点击accept完成")
+                self.logger.info("✅ 点击accept成功")
                 self.login_running = False
                 self.refresh_page()
                 self.start_auto_find_coin()
@@ -1584,7 +1570,7 @@ class CryptoTrader:
     """以上代码执行了登录操作的函数,直到第 1315 行,程序执行返回到 748 行"""
    
     """以下代码是监控买卖条件及执行交易的函数,程序开始进入交易阶段,从 1468 行直到第 2224200 行"""  
-    def is_accept(self):
+    def is_buy_accept(self):
         # 获取屏幕尺寸
         monitor = get_monitors()[0]  # 获取主屏幕信息
         screen_width, screen_height = monitor.width, monitor.height
@@ -1602,10 +1588,11 @@ class CryptoTrader:
         time.sleep(2)
 
         if "Accept" in text_chi_sim:
-            self.logger.info("检测到MetaMask弹窗,显示'Accept'")
+            self.logger.info("检测到弹窗,显示'Accept'")
             # 点击 "Accept" 按钮
             pyautogui.press('enter')
-            self.logger.info("✅ 点击 ACCEPT 执行完成")
+            self.buy_confirm_button.invoke()
+            self.logger.info("✅ 点击 ACCEPT 完成")
             
             return True
         else:
@@ -1651,7 +1638,7 @@ class CryptoTrader:
                         self.amount_yes1_button.event_generate('<Button-1>')
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
-                        if not self.is_accept():
+                        if not self.is_buy_accept():
                             pass
                         
                         time.sleep(0.5)
@@ -1707,7 +1694,7 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        if not self.is_accept():
+                        if not self.is_buy_accept():
                             pass
                         
                         # 执行等待和刷新
@@ -1800,7 +1787,7 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        if not self.is_accept():
+                        if not self.is_buy_accept():
                             pass
                         
                         # 执行等待和刷新
@@ -1845,7 +1832,7 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        if not self.is_accept():
+                        if not self.is_buy_accept():
                             pass
                         
                         # 执行等待和刷新
@@ -1929,7 +1916,7 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        if not self.is_accept():
+                        if not self.is_buy_accept():
                             pass
                         
                         # 执行等待和刷新
@@ -1973,7 +1960,7 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        if not self.is_accept():
+                        if not self.is_buy_accept():
                             pass
                         
                         # 执行等待和刷新
@@ -2057,7 +2044,7 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        if not self.is_accept():
+                        if not self.is_buy_accept():
                             pass
                         
                         # 执行等待和刷新
@@ -2105,7 +2092,7 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
-                        if not self.is_accept():
+                        if not self.is_buy_accept():
                             pass
                         
                         # 执行等待和刷新
@@ -2287,7 +2274,35 @@ class CryptoTrader:
             self.update_status(f"Sell_no执行失败: {str(e)}")
         finally:
             self.trading = False
+
+    def is_sell_accept(self):
+        # 获取屏幕尺寸
+        monitor = get_monitors()[0]  # 获取主屏幕信息
+        screen_width, screen_height = monitor.width, monitor.height
+        time.sleep(1)
+
+        # 截取屏幕右上角区域用于OCR识别
+        # 区域参数格式为(left, top, width, height)
+        # 截图区域从上往下(0,870),从右往左(0,870),
+        right_top_region = (screen_width - 870, 0, 870, 870)  
+        screen = pyautogui.screenshot(region=right_top_region)
+        screen.save("screen.png")
+        time.sleep(1)
+        # 使用OCR识别文本
+        text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
+        time.sleep(2)
+
+        if "Accept" in text_chi_sim:
+            self.logger.info("检测到弹窗,显示'Accept'")
+            # 点击 "Accept" 按钮
+            pyautogui.press('enter')
+            self.sell_confirm_button.invoke()
+            self.logger.info("✅ 点击 ACCEPT 完成")
             
+            return True
+        else:
+            return False
+      
     def only_sell_yes(self):
         """只卖出YES"""
         # 获取当前价格
@@ -2315,8 +2330,8 @@ class CryptoTrader:
 
         self.position_sell_yes_button.invoke()
         time.sleep(0.5)
-        self.sell_profit_button.invoke()
-        if not self.is_accept():
+        self.sell_confirm_button.invoke()
+        if not self.is_sell_accept():
             pass
 
         
@@ -2364,8 +2379,8 @@ class CryptoTrader:
 
         self.position_sell_no_button.invoke()
         time.sleep(0.5)
-        self.sell_profit_button.invoke()
-        if not self.is_accept():
+        self.sell_confirm_button.invoke()
+        if not self.is_sell_accept():
             pass
 
         
@@ -2389,7 +2404,7 @@ class CryptoTrader:
         
     """以上代码是交易主体函数 1-4,从第 1370 行到第 2242行"""
 
-    """以下代码是交易过程中的各种方法函数，涉及到按钮的点击，从第 2244 行到第 2528 行"""
+    """以下代码是交易过程中的各种点击方法函数，涉及到按钮的点击，从第 2392 行到第 2528 行"""
     def click_buy_confirm_button(self):
         try:
             buy_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.BUY_CONFIRM_BUTTON)
@@ -2484,34 +2499,25 @@ class CryptoTrader:
             self.logger.error(error_msg)
             self.update_status(error_msg)
 
-    def click_profit_sell(self):
-        """点击卖出盈利按钮并处理 MetaMask 弹窗"""
+    def click_sell_confirm_button(self):
+        """点击sell-卖出按钮"""
         try:
             if not self.driver:
                 self.update_status("请先连接浏览器")
                 return
             # 点击Sell-卖出按钮
             try:
-                button = self.driver.find_element(By.XPATH, XPathConfig.SELL_PROFIT_BUTTON)
+                sell_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.SELL_CONFIRM_BUTTON)
             except Exception as e:
-                button = self._find_element_with_retry(
-                    XPathConfig.SELL_PROFIT_BUTTON,
+                sell_confirm_button = self._find_element_with_retry(
+                    XPathConfig.SELL_CONFIRM_BUTTON,
                     timeout=3,
                     silent=True
                 )
-            button.click()
-            self.update_status("已点击卖出盈利按钮")
-            # 等待MetaMask弹窗出现
-            time.sleep(1)
-            # 使用统一的MetaMask弹窗处理方法
-            self._handle_metamask_popup()
-            """ 等待 4 秒，刷新 2 次，预防交易失败 """
-            # 等待交易完成
-            time.sleep(2)
-            self.driver.refresh()
-            self.update_status("交易完成并刷新页面")
+            sell_confirm_button.click()
+            
         except Exception as e:
-            error_msg = f"卖出盈利操作失败: {str(e)}"
+            error_msg = f"卖出操作失败: {str(e)}"
             self.logger.error(error_msg)
             self.update_status(error_msg)
 
@@ -2574,47 +2580,6 @@ class CryptoTrader:
         except Exception as e:
             self.logger.error(f"点击 Buy-No 按钮失败: {str(e)}")
             self.update_status(f"点击 Buy-No 按钮失败: {str(e)}")
-
-    def click_sell_yes(self):
-        """点击 Sell-Yes 按钮"""
-        try:
-            if not self.driver:
-                self.update_status("请先连接浏览器")
-                return
-            
-            try:
-                button = self.driver.find_element(By.XPATH, XPathConfig.SELL_YES_BUTTON)
-            except Exception as e:
-                button = self._find_element_with_retry(
-                    XPathConfig.SELL_YES_BUTTON,
-                    timeout=3,
-                    silent=True
-                )
-            button.click()
-            self.update_status("已点击 Sell-Yes 按钮")
-        except Exception as e:
-            self.logger.error(f"点击 Sell-Yes 按钮失败: {str(e)}")
-            self.update_status(f"点击 Sell-Yes 按钮失败: {str(e)}")
-
-    def click_sell_no(self):
-        """点击 Sell-No 按钮"""
-        try:
-            if not self.driver:
-                self.update_status("请先连接浏览器")
-                return
-            try:
-                button = self.driver.find_element(By.XPATH, XPathConfig.SELL_NO_BUTTON)
-            except Exception as e:
-                button = self._find_element_with_retry(
-                    XPathConfig.SELL_NO_BUTTON,
-                    timeout=3,
-                    silent=True
-                )
-            button.click()
-            self.update_status("已点击 Sell-No 按钮")
-        except Exception as e:
-            self.logger.error(f"点击 Sell-No 按钮失败: {str(e)}")
-            self.update_status(f"点击 Sell-No 按钮失败: {str(e)}")
 
     def click_amount(self, event=None):
         """点击 Amount 按钮并输入数量"""
