@@ -2178,9 +2178,11 @@ class CryptoTrader:
                         self.only_sell_yes()
                         self.logger.info("卖完 YES 后，再卖 NO")
                         # 卖 NO 之前先检查是否有 NO 标签
-                        position_label_no = self.find_position_label_no()
-                        if position_label_no == "No":
+                        if self.find_position_label_no():
                             self.only_sell_no()
+                        else:
+                            pass
+                        
                         # 重置所有价格
                         for i in range(1,6):  # 1-5
                             yes_entry = getattr(self, f'yes{i}_price_entry', None)
@@ -2247,9 +2249,10 @@ class CryptoTrader:
                         self.only_sell_no()
                         self.logger.info("卖完 NO 后，再卖 YES")
 
-                        position_label_yes = self.find_position_label_yes()
-                        if position_label_yes == "Yes":
+                        if self.find_position_label_yes():
                             self.only_sell_yes()
+                        else:
+                            pass
 
                         # 重置所有价格
                         for i in range(1,6):  # 1-5
@@ -3050,22 +3053,22 @@ class CryptoTrader:
                 # 尝试获取YES标签
                 try:
                     position_label_yes = self.driver.find_element(By.XPATH, XPathConfig.POSITION_YES_LABEL)
-                    self.logger.info(f"找到了Yes持仓标签: {position_label_yes.text}")
+                    if position_label_yes:
+                        self.logger.info(f"找到了Yes持仓标签: {position_label_yes.text}")
+                        return True
+                    else:
+                        self.logger.debug("未找到Yes持仓标签")
+                        return False
                     
                 except Exception:
                     position_label_yes = self._find_element_with_retry(XPathConfig.POSITION_YES_LABEL, timeout=3, silent=True)
 
                     if position_label_yes:
                         self.logger.info(f"找到了Yes持仓标签: {position_label_yes.text}")
+                        return True
                     else:
                         self.logger.debug("未找到Yes持仓标签")
-                        return None
-                # 如果找到了标签，返回标签文本
-                if position_label_yes:
-                    return position_label_yes.text
-                else:
-                    self.logger.debug("未找到Yes持仓")
-                    return None
+                        return False
                          
             except TimeoutException:
                 self.logger.debug(f"第{attempt + 1}次尝试未找到YES标签,正常情况!")
@@ -3076,7 +3079,7 @@ class CryptoTrader:
                 self.logger.info(f"等待{retry_delay}秒后重试...")
                 time.sleep(retry_delay)
                 self.driver.refresh()
-        return None
+        return False
         
     def find_position_label_no(self):
         """查找No持仓标签"""
@@ -3098,21 +3101,17 @@ class CryptoTrader:
                 try:
                     position_label_no = self.driver.find_element(By.XPATH, XPathConfig.POSITION_NO_LABEL)
                     self.logger.info(f"找到了No持仓标签: {position_label_no.text}")
+                    return True
                     
                 except Exception:
                     position_label_no = self._find_element_with_retry(XPathConfig.POSITION_NO_LABEL, timeout=3, silent=True)
 
                     if position_label_no:
                         self.logger.info(f"找到了No持仓标签: {position_label_no.text}")
+                        return True
                     else:
                         self.logger.debug("未找到No持仓标签")
-                        return None
-                # 如果找到了标签，返回标签文本
-                if position_label_no:
-                    return position_label_no.text
-                else:
-                    self.logger.debug("未找到No持仓")
-                    return None
+                        return False
                                
             except TimeoutException:
                 self.logger.warning(f"第{attempt + 1}次尝试未找到NO标签")
@@ -3123,7 +3122,7 @@ class CryptoTrader:
                 self.logger.info(f"等待{retry_delay}秒后重试...")
                 time.sleep(retry_delay)
                 self.driver.refresh()
-        return None
+        return False
     
     def is_auto_find_54_coin_time(self):
         """判断是否处于自动找币时段(周六2点至周五20点)"""
