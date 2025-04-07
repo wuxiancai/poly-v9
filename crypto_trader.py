@@ -1099,7 +1099,7 @@ class CryptoTrader:
                 # 新增触发条件：首次获取到Cash值时安排设置金额
                 if not hasattr(self, 'cash_initialized'):
                     self.cash_initialized = True
-                    self.root.after(1000, self.schedule_update_amount)  # 延迟1秒确保数据稳定
+                    self.root.after(2000, self.schedule_update_amount)  # 延迟2秒确保数据稳定
 
                 # 新最后更新间
                 current_time = datetime.now().strftime('%H:%M:%S')
@@ -1147,8 +1147,7 @@ class CryptoTrader:
             if yes1_amount and yes1_amount != '0.0':
                 # 延迟1秒设置价格
                 self.root.after(2000, lambda: self.set_yes_no_default_target_price())
-                # 延迟2秒启动刷新页面
-                self.root.after(3000, self.driver.refresh())
+                
             else:
                 if current_retry < 15:  # 最多重试15次
                     self.logger.info("❌ 金额未成功设置,2秒后重试")
@@ -1170,7 +1169,7 @@ class CryptoTrader:
         """设置 Yes/No 各级金额"""
         if not hasattr(self, 'cash_initialized'):
             self.logger.warning("Cash数据尚未就绪,延迟设置金额")
-            self.root.after(1000, self.set_yes_no_cash)
+            self.root.after(2000, self.set_yes_no_cash)
             return
         try:
             #设置重试参数
