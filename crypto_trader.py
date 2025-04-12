@@ -1576,7 +1576,7 @@ class CryptoTrader:
         # 截取屏幕右上角区域用于OCR识别
         # 区域参数格式为(left, top, width, height)
         # 截图区域从上往下(0,870),从右往左(0,870),
-        right_top_region = (screen_width - 870, 0, 870, 870)  
+        right_top_region = (screen_width - 870, 330, 550, 500)  
         screen = pyautogui.screenshot(region=right_top_region)
         screen.save("screen.png")
         time.sleep(1)
@@ -1584,10 +1584,11 @@ class CryptoTrader:
         text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
         time.sleep(2)
 
-        if "Accept" in text_chi_sim:
-            self.logger.info("检测到弹窗,显示'Accept'") 
+        if "I Accept" in text_chi_sim:
+            self.logger.info("检测到弹窗,显示'I Accept'") 
             return True
         else:
+            self.logger.info("没有检测到弹窗")
             return False
 
     def First_trade(self):
