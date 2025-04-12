@@ -1579,7 +1579,7 @@ class CryptoTrader:
         right_top_region = (screen_width - 870, 330, 550, 500)  
         screen = pyautogui.screenshot(region=right_top_region)
         screen.save("screen.png")
-        time.sleep(1)
+        time.sleep(3)
         # 使用OCR识别文本
         # 以下是中文识别
         # text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
@@ -1593,24 +1593,6 @@ class CryptoTrader:
             if accept_text in text_eng:
                 self.logger.info(f"检测到弹窗,显示'{accept_text}'") 
                 return True
-        
-        # 2. 如果OCR失败，尝试检测蓝色按钮
-        # 蓝色按钮的RGB特征 - Polymarket的蓝色按钮
-        blue_count = 0
-        blue_pixels_threshold = 5000  # 蓝色像素阈值
-        
-        # 遍历图像像素
-        for x in range(screen.width):
-            for y in range(screen.height):
-                r, g, b = screen.getpixel((x, y))
-                # Polymarket蓝色按钮的RGB特征 (大约是RGB: 0, 90, 255)
-                if b > 200 and r < 50 and g < 120:
-                    blue_count += 1
-                    if blue_count > blue_pixels_threshold:
-                        self.logger.info(f"通过颜色特征检测到蓝色Accept按钮，蓝色像素数: {blue_count}")
-                        return True
-        
-        self.logger.info(f"蓝色像素数: {blue_count}，未达到阈值 {blue_pixels_threshold}")
         
         self.logger.info("没有检测到弹窗")
         return False
