@@ -1585,9 +1585,7 @@ class CryptoTrader:
         time.sleep(2)
 
         if "Accept" in text_chi_sim:
-            self.logger.info("检测到弹窗,显示'Accept'")
-           
-            
+            self.logger.info("检测到弹窗,显示'Accept'") 
             return True
         else:
             return False
@@ -1633,7 +1631,7 @@ class CryptoTrader:
                         time.sleep(0.5)
                         self.buy_confirm_button.invoke()
                         if self.is_buy_accept():
-                             # 点击 "Accept" 按钮
+                            # 点击 "Accept" 按钮
                             pyautogui.press('enter')
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ACCEPT 完成")
@@ -1692,7 +1690,7 @@ class CryptoTrader:
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
                         if self.is_buy_accept():
-                             # 点击 "Accept" 按钮
+                            # 点击 "Accept" 按钮
                             pyautogui.press('enter')
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ACCEPT 完成")
@@ -1788,7 +1786,7 @@ class CryptoTrader:
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
                         if self.is_buy_accept():
-                             # 点击 "Accept" 按钮
+                            # 点击 "Accept" 按钮
                             pyautogui.press('enter')
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ACCEPT 完成")
@@ -1835,7 +1833,7 @@ class CryptoTrader:
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
                         if self.is_buy_accept():
-                             # 点击 "Accept" 按钮
+                            # 点击 "Accept" 按钮
                             pyautogui.press('enter')
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ACCEPT 完成")
@@ -1922,7 +1920,7 @@ class CryptoTrader:
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
                         if self.is_buy_accept():
-                             # 点击 "Accept" 按钮
+                            # 点击 "Accept" 按钮
                             pyautogui.press('enter')
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ACCEPT 完成")
@@ -1969,7 +1967,7 @@ class CryptoTrader:
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
                         if self.is_buy_accept():
-                             # 点击 "Accept" 按钮
+                            # 点击 "Accept" 按钮
                             pyautogui.press('enter')
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ACCEPT 完成")
@@ -2056,7 +2054,7 @@ class CryptoTrader:
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
                         if self.is_buy_accept():
-                             # 点击 "Accept" 按钮
+                            # 点击 "Accept" 按钮
                             pyautogui.press('enter')
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ACCEPT 完成")
@@ -2107,7 +2105,7 @@ class CryptoTrader:
                         self.buy_confirm_button.invoke()
                         time.sleep(1)
                         if self.is_buy_accept():
-                             # 点击 "Accept" 按钮
+                            # 点击 "Accept" 按钮
                             pyautogui.press('enter')
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ACCEPT 完成")
@@ -2314,7 +2312,6 @@ class CryptoTrader:
 
         if "Accept" in text_chi_sim:
             self.logger.info("检测到弹窗,显示'Accept'")
-            
             return True
         else:
             return False
