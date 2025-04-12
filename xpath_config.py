@@ -49,9 +49,7 @@ class XPathConfig:
 
     # 8.Buy-确认买入按钮
     BUY_CONFIRM_BUTTON = [
-        '//button[@class="c-bDcLpV c-bDcLpV-fLyPyt-color-blue c-bDcLpV-ileGDsu-css"]',
-        '//button[.//span[contains(text(), "B")] and .//span[contains(text(), "u")] and .//span[contains(text(), "y")] and .//span[contains(text(), "Y")] and .//span[contains(text(), "e")] and .//span[contains(text(), "s")]]',
-        '//button[.//span[contains(text(), "B")] and .//span[contains(text(), "u")] and .//span[contains(text(), "y")] and .//span[contains(text(), "N")] and .//span[contains(text(), "o")]'
+        '//button[@class="c-bDcLpV c-bDcLpV-fLyPyt-color-blue c-bDcLpV-ileGDsu-css"]'
         ]
 
     # 9.Sell-卖出按钮
