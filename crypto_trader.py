@@ -1582,9 +1582,9 @@ class CryptoTrader:
         time.sleep(1)
         # 使用OCR识别文本
         text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
-        time.sleep(2)
+        time.sleep(3)
 
-        if "I Accept" in text_chi_sim:
+        if "Accept" in text_chi_sim:
             self.logger.info("检测到弹窗,显示'I Accept'") 
             return True
         else:
