@@ -1478,42 +1478,14 @@ class CryptoTrader:
             self.buy_confirm_button.invoke()
             time.sleep(1)
             
-            # 获取屏幕尺寸
-            monitor = get_monitors()[0]  # 获取主屏幕信息
-            screen_width, screen_height = monitor.width, monitor.height
-            time.sleep(1)
-
-            # 截取屏幕右上角区域用于OCR识别
-            # 区域参数格式为(left, top, width, height)
-            # 截图区域从上往下(0,870),从右往左(0,870),
-            right_top_region = (screen_width - 870, 0, 870, 870)  
-            screen = pyautogui.screenshot(region=right_top_region)
-            screen.save("screen.png")
-            time.sleep(2)
-            # 使用OCR识别文本
-            text_eng = pytesseract.image_to_string(screen, lang='eng')
-            time.sleep(3)
-
-            if "Accept" in text_eng:
-                self.logger.info("检测到ACCEPT弹窗")
+            if self.is_buy_accept():
                 # 点击 "Accept" 按钮
                 pyautogui.press('enter')
                 self.logger.info("✅ 点击accept成功")
+                
                 self.login_running = False
                 self.refresh_page()
                 self.start_auto_find_coin()
-                
-            else:
-                self.logger.info("没有 ACCEPT 按钮")
-                # 计算 "取消" 按钮位置
-                cancel_button_x = screen_width - 170  # 同样靠右对齐
-                cancel_button_y = 605  # "确认" 按钮通常在下方
-                time.sleep(2)
-                # 点击 "取消" 按钮
-                pyautogui.click(cancel_button_x, cancel_button_y)
-                self.login_running = False
-                self.refresh_page()
-                self.start_auto_find_coin()  
             
         except Exception as e:
             self.logger.error(f"click_accept_button执行失败: {str(e)}")
@@ -1568,34 +1540,24 @@ class CryptoTrader:
    
     """以下代码是监控买卖条件及执行交易的函数,程序开始进入交易阶段,从 1468 行直到第 2224200 行"""  
     def is_buy_accept(self):
-        # 获取屏幕尺寸
-        monitor = get_monitors()[0]  # 获取主屏幕信息
-        screen_width, screen_height = monitor.width, monitor.height
-        time.sleep(1)
-
-        # 截取屏幕右上角区域用于OCR识别
-        # 区域参数格式为(left, top, width, height)
-        # 截图区域从上往下(0,870),从右往左(0,870),
-        right_top_region = (screen_width - 870, 330, 550, 500)  
-        screen = pyautogui.screenshot(region=right_top_region)
-        screen.save("screen.png")
-        time.sleep(3)
-        # 使用OCR识别文本
-        # 以下是中文识别
-        # text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
-        # 以下是英文识别
-        text_eng = pytesseract.image_to_string(screen, lang='eng')
-        time.sleep(3)
-
-        # 检查多种可能的文本
-        accept_texts = ["Accept", "I Accept", "accept", "ACCEPT"]
-        for accept_text in accept_texts:
-            if accept_text in text_eng:
-                self.logger.info(f"检测到弹窗,显示'{accept_text}'") 
-                return True
-        
-        self.logger.info("没有检测到弹窗")
-        return False
+        """检查是否存在"Accept"按钮"""
+        try:
+            accept_button = self.driver.find_element(By.XPATH, XPathConfig.ACCEPT_BUTTON)
+            
+        except Exception as e:
+            accept_button = self._find_element_with_retry(
+                XPathConfig.ACCEPT_BUTTON,
+                timeout=3,
+                silent=True
+            )
+           
+        if accept_button:
+            self.logger.info("检测到ACCEPT弹窗")
+            return True
+        else:
+            self.logger.info("没有检测到ACCEPT弹窗")
+            return False
+         
 
     def First_trade(self):
         try:
