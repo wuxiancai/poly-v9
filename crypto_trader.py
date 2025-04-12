@@ -1564,7 +1564,7 @@ class CryptoTrader:
         pyautogui.click(x=1180, y=700)
         time.sleep(0.5)
         pyautogui.press('enter')
-        self.logger.info("已点击 x=1180, y=700")
+
     def First_trade(self):
         try:
             # 获取当前Yes和No价格
@@ -1611,7 +1611,7 @@ class CryptoTrader:
                             # 点击 "Accept" 按钮
                             self.refocus_and_accept()
                             self.logger.info("✅ 点击 ENTER 完成")
-                            time.sleep(5)
+                            time.sleep(2)
                             self.buy_confirm_button.invoke()
                             
                         time.sleep(0.5)
@@ -1674,7 +1674,7 @@ class CryptoTrader:
                             time.sleep(0.5)
                             
                             self.logger.info("✅ 点击 ENTER 完成")
-                            time.sleep(5)
+                            time.sleep(2)
                             self.buy_confirm_button.invoke()
                         
                         # 执行等待和刷新
@@ -1774,7 +1774,7 @@ class CryptoTrader:
                             time.sleep(0.5)
                             
                             self.logger.info("✅ 点击 ENTER 完成")
-                            time.sleep(5)
+                            time.sleep(2)
                             self.buy_confirm_button.invoke()
                             
                         # 执行等待和刷新
@@ -1824,7 +1824,7 @@ class CryptoTrader:
                             # 点击 "Accept" 按钮
                             time.sleep(0.5)
                             self.refocus_and_accept()
-                            time.sleep(5)
+                            time.sleep(2)
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ENTER 完成")
                         
@@ -1914,7 +1914,7 @@ class CryptoTrader:
                             # 点击 "Accept" 按钮
                             time.sleep(0.5)
                             self.refocus_and_accept()
-                            time.sleep(5)
+                            time.sleep(2)
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ACCEPT 完成")
                         
@@ -1964,7 +1964,7 @@ class CryptoTrader:
                             # 点击 "Accept" 按钮
                             time.sleep(0.5)
                             self.refocus_and_accept()
-                            time.sleep(5)
+                            time.sleep(2)
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ENTER 完成")
                         
@@ -2053,7 +2053,7 @@ class CryptoTrader:
                             # 点击 "Accept" 按钮
                             time.sleep(0.5)
                             self.refocus_and_accept()
-                            time.sleep(5)
+                            time.sleep(2)
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ENTER 完成")
                         
@@ -2106,7 +2106,7 @@ class CryptoTrader:
                             # 点击 "Accept" 按钮
                             time.sleep(0.5)
                             self.refocus_and_accept()
-                            time.sleep(5)
+                            time.sleep(2)
                             self.buy_confirm_button.invoke()
                             self.logger.info("✅ 点击 ENTER 完成")
                         
@@ -2344,7 +2344,7 @@ class CryptoTrader:
         if self.is_sell_accept():
             # 点击 "Accept" 按钮
             self.refocus_and_accept()
-            time.sleep(5)
+            time.sleep(2)
             self.sell_confirm_button.invoke()
             self.logger.info("✅ 点击 ACCEPT 完成")
 
@@ -2397,7 +2397,7 @@ class CryptoTrader:
         if self.is_sell_accept():
             # 点击 "Accept" 按钮
             self.refocus_and_accept()
-            time.sleep(5)
+            time.sleep(2)
             self.sell_confirm_button.invoke()
             self.logger.info("✅ 点击 ACCEPT 完成")
 
