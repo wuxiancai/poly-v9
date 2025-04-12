@@ -162,4 +162,8 @@ class XPathConfig:
         '//*[@id="authentication-modal"]/div/div[2]/div/div/div/div/button'
     ]
     
-    
+    #26.accept_button长期有效
+    ACCEPT_BUTTON = [
+        '//button[contains(text(), "Accept")]',
+        '//button[contains(text(), "I Accept")]'
+    ]    
