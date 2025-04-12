@@ -1488,13 +1488,13 @@ class CryptoTrader:
             # 截图区域从上往下(0,870),从右往左(0,870),
             right_top_region = (screen_width - 870, 0, 870, 870)  
             screen = pyautogui.screenshot(region=right_top_region)
-            
+            screen.save("screen.png")
             time.sleep(2)
             # 使用OCR识别文本
-            text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
+            text_eng = pytesseract.image_to_string(screen, lang='eng')
             time.sleep(3)
 
-            if "Accept" in text_chi_sim:
+            if "Accept" in eng:
                 self.logger.info("检测到ACCEPT弹窗")
                 # 点击 "Accept" 按钮
                 pyautogui.press('enter')
@@ -1581,15 +1581,21 @@ class CryptoTrader:
         screen.save("screen.png")
         time.sleep(1)
         # 使用OCR识别文本
-        text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
+        # 以下是中文识别
+        # text_chi_sim = pytesseract.image_to_string(screen, lang='chi_sim')
+        # 以下是英文识别
+        text_eng = pytesseract.image_to_string(screen, lang='eng')
         time.sleep(3)
 
-        if "Accept" in text_chi_sim:
-            self.logger.info("检测到弹窗,显示'I Accept'") 
-            return True
-        else:
-            self.logger.info("没有检测到弹窗")
-            return False
+        # 检查多种可能的文本
+        accept_texts = ["Accept", "I Accept", "accept", "ACCEPT"]
+        for accept_text in accept_texts:
+            if accept_text in text_eng:
+                self.logger.info(f"检测到弹窗,显示'{accept_text}'") 
+                return True
+        
+        self.logger.info("没有检测到弹窗")
+        return False
 
     def First_trade(self):
         try:
