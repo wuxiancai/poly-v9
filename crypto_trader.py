@@ -1652,6 +1652,8 @@ class CryptoTrader:
                                 self.no5_price_entry.delete(0, tk.END)
                                 self.no5_price_entry.insert(0, "0.98")
                                 self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+                                self.logger.info("First_trade执行成功")
+                                break
                             else:
                                 # 设置 Yes5和No5价格为0.85
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
@@ -1724,6 +1726,8 @@ class CryptoTrader:
                                 self.no5_price_entry.delete(0, tk.END)
                                 self.no5_price_entry.insert(0, "0.98")
                                 self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+                                self.logger.info("First_trade执行成功")
+                                break
                             else:
                                 # 设置 Yes5和No5价格为0.85
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
