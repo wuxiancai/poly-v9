@@ -1642,7 +1642,8 @@ class CryptoTrader:
                             self.no2_price_entry.insert(0, str(self.default_target_price))
                             self.no2_price_entry.configure(foreground='red')  # 添加红色设置
 
-                            if '--restart' in sys.argv:
+                            is_restart = '--restart' in sys.argv
+                            if is_restart:
                                 # 设置 Yes5和No5价格为0.98
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
@@ -1714,7 +1715,8 @@ class CryptoTrader:
                             self.yes2_price_entry.insert(0, str(self.default_target_price))
                             self.yes2_price_entry.configure(foreground='red')  # 添加红色设置
 
-                            if '--restart' in sys.argv:
+                            is_restart = '--restart' in sys.argv
+                            if is_restart:
                                 # 设置 Yes5和No5价格为0.98
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
@@ -2091,7 +2093,8 @@ class CryptoTrader:
                             self.no4_price_entry.insert(0, "0.00")
 
                             """当买了 4次后预防第 5 次反水，所以价格到了 50 时就平仓，然后再自动开"""
-                            if '--restart' in sys.argv:
+                            is_restart = '--restart' in sys.argv
+                            if is_restart:
                                 # 设置 Yes5价格为 0.98和No5价格为0.5
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
@@ -2154,7 +2157,8 @@ class CryptoTrader:
                             self.no4_price_entry.insert(0, "0.00")
 
                             """当买了 4次后预防第 5 次反水，所以价格到了 50 时就平仓，然后再自动开"""
-                            if '--restart' in sys.argv:
+                            is_restart = '--restart' in sys.argv
+                            if is_restart:
                                 # 设置 Yes5价格为 0.5和No5价格为0.98
                                 self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                                 self.yes5_price_entry.delete(0, tk.END)
