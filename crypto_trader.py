@@ -1080,7 +1080,7 @@ class CryptoTrader:
                 try:
                     portfolio_element = self.driver.find_element(By.XPATH, XPathConfig.PORTFOLIO_VALUE)
                     self.portfolio_value = portfolio_element.text
-                except Exception as e:
+                except NoSuchElementException:
                     portfolio_element = self._find_element_with_retry(XPathConfig.PORTFOLIO_VALUE)
                     self.portfolio_value = portfolio_element.text
             
@@ -1088,7 +1088,7 @@ class CryptoTrader:
                 try:
                     cash_element = self.driver.find_element(By.XPATH, XPathConfig.CASH_VALUE)
                     self.cash_value = cash_element.text
-                except Exception as e:
+                except NoSuchElementException:
                     cash_element = self._find_element_with_retry(XPathConfig.CASH_VALUE)
                     self.cash_value = cash_element.text
                 
@@ -1353,7 +1353,7 @@ class CryptoTrader:
         # 使用静默模式查找元素，并添加空值检查
         try:
             login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON)
-        except Exception as e:
+        except NoSuchElementException:
             login_button = self._find_element_with_retry(
                 XPathConfig.LOGIN_BUTTON,
                 timeout=3,
@@ -1427,7 +1427,7 @@ class CryptoTrader:
             try:
                 login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON)
                 login_button.click()
-            except Exception as e:
+            except NoSuchElementException:
                 login_button = self._find_element_with_retry(
                     XPathConfig.LOGIN_BUTTON,
                     timeout=3,
@@ -1439,7 +1439,7 @@ class CryptoTrader:
             # 使用 XPath 定位并点击 google 按钮
             google_button = self._find_element_with_retry(XPathConfig.LOGIN_WITH_GOOGLE_BUTTON)
             google_button.click()
-            time.sleep(2)
+            time.sleep(5)
 
             if not self.find_login_button():
                 self.logger.info("✅ 登录成功")
@@ -1457,18 +1457,17 @@ class CryptoTrader:
     def click_accept_button(self):
         """重新登录后,需要在amount输入框输入1并确认"""
         self.logger.info("开始执行click_accept_button")
-        
         try:
             # 等待输入框可交互
             try:
                 amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT)
-            except Exception as e:
+            except NoSuchElementException:
                 amount_input = self._find_element_with_retry(
                     XPathConfig.AMOUNT_INPUT,
                     timeout=3,
                     silent=True
                 )
-            
+            time.sleep(1)
             # 清除现有输入并输入新值
             amount_input.clear()
             amount_input.send_keys("1")
@@ -2298,7 +2297,7 @@ class CryptoTrader:
         try:
             accept_button = self.driver.find_element(By.XPATH, XPathConfig.ACCEPT_BUTTON[0])
             
-        except Exception as e:
+        except NoSuchElementException:
             accept_button = self._find_element_with_retry(
                 XPathConfig.ACCEPT_BUTTON,
                 timeout=3,
@@ -2453,7 +2452,7 @@ class CryptoTrader:
                 # 如果第一行是Yes，点击第二的按钮
                 try:
                     button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_NO_BUTTON)
-                except Exception as e:
+                except NoSuchElementException:
                     button = self._find_element_with_retry(
                         XPathConfig.POSITION_SELL_NO_BUTTON,
                         timeout=3,
@@ -2463,7 +2462,7 @@ class CryptoTrader:
                 # 如果第一行不存在或不是Yes，使用默认的第一行按钮
                 try:
                     button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_BUTTON)
-                except Exception as e:
+                except NoSuchElementException:
                     button = self._find_element_with_retry(
                         XPathConfig.POSITION_SELL_BUTTON,
                         timeout=3,
@@ -2494,7 +2493,7 @@ class CryptoTrader:
                 # 如果第二行是No，点击第一行YES 的 SELL的按钮
                 try:
                     button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_YES_BUTTON)
-                except Exception as e:
+                except NoSuchElementException:
                     button = self._find_element_with_retry(
                         XPathConfig.POSITION_SELL_YES_BUTTON,
                         timeout=3,
@@ -2504,7 +2503,7 @@ class CryptoTrader:
                 # 如果第二行不存在或不是No，使用默认的第一行按钮
                 try:
                     button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_BUTTON)
-                except Exception as e:
+                except NoSuchElementException:
                     button = self._find_element_with_retry(
                         XPathConfig.POSITION_SELL_BUTTON,
                         timeout=3,
@@ -2526,7 +2525,7 @@ class CryptoTrader:
             # 点击Sell-卖出按钮
             try:
                 sell_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.SELL_CONFIRM_BUTTON)
-            except Exception as e:
+            except NoSuchElementException:
                 sell_confirm_button = self._find_element_with_retry(
                     XPathConfig.SELL_CONFIRM_BUTTON,
                     timeout=3,
@@ -2545,7 +2544,7 @@ class CryptoTrader:
                 self.restart_browser()
             try:
                 button = self.driver.find_element(By.XPATH, XPathConfig.BUY_BUTTON)
-            except Exception as e:
+            except NoSuchElementException:
                 button = self._find_element_with_retry(
                     XPathConfig.BUY_BUTTON,
                     timeout=3,
@@ -2565,7 +2564,7 @@ class CryptoTrader:
             
             try:
                 button = self.driver.find_element(By.XPATH, XPathConfig.BUY_YES_BUTTON)
-            except Exception as e:
+            except NoSuchElementException:
                 button = self._find_element_with_retry(
                     XPathConfig.BUY_YES_BUTTON,
                     timeout=3,
@@ -2584,7 +2583,7 @@ class CryptoTrader:
                 self.restart_browser()
             try:
                 button = self.driver.find_element(By.XPATH, XPathConfig.BUY_NO_BUTTON)
-            except Exception as e:
+            except NoSuchElementException:
                 button = self._find_element_with_retry(
                     XPathConfig.BUY_NO_BUTTON,
                     timeout=3,
@@ -2608,7 +2607,7 @@ class CryptoTrader:
             # 找到输入框
             try:
                 amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT)
-            except Exception as e:
+            except NoSuchElementException:
                 amount_input = self._find_element_with_retry(
                     XPathConfig.AMOUNT_INPUT,
                     timeout=3,
@@ -2664,7 +2663,7 @@ class CryptoTrader:
                 self.restart_browser()            # 等待并检查是否存在 Yes 交易记录
             try:
                 yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
-            except Exception as e:
+            except NoSuchElementException:
                 yes_element = self._find_element_with_retry(
                     XPathConfig.HISTORY,
                     timeout=3,
@@ -2699,7 +2698,7 @@ class CryptoTrader:
             # 等待并检查是否存在 No 标签
             try:
                 no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
-            except Exception as e:
+            except NoSuchElementException:
                 no_element = self._find_element_with_retry(
                     XPathConfig.HISTORY,
                     timeout=3,
@@ -2726,7 +2725,7 @@ class CryptoTrader:
         """获取当前持仓YES的金额"""
         try:
             yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
-        except Exception as e:
+        except NoSuchElementException:
             yes_element = self._find_element_with_retry(
                 XPathConfig.HISTORY,
                 timeout=3,
@@ -2742,7 +2741,7 @@ class CryptoTrader:
         """获取当前持仓NO的金额"""
         try:
             no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
-        except Exception as e:
+        except NoSuchElementException:
             no_element = self._find_element_with_retry(
                 XPathConfig.HISTORY,
                 timeout=3,
@@ -2764,7 +2763,7 @@ class CryptoTrader:
                 self.restart_browser()            # 等待并检查是否存在 Yes 交易记录
             try:
                 yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
-            except Exception as e:
+            except NoSuchElementException:
                 yes_element = self._find_element_with_retry(
                     XPathConfig.HISTORY,
                     timeout=3,
@@ -2798,7 +2797,7 @@ class CryptoTrader:
                 self.restart_browser()            # 等待并检查是否存在 No 交易记录
             try:
                 no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
-            except Exception as e:
+            except NoSuchElementException:
                 no_element = self._find_element_with_retry(
                     XPathConfig.HISTORY,
                     timeout=3,
@@ -3229,7 +3228,7 @@ class CryptoTrader:
                 portfolio_button = self.driver.find_element(By.XPATH, XPathConfig.PORTFOLIO_BUTTON)
                 portfolio_button.click()
                 time.sleep(1)
-            except Exception as e: 
+            except NoSuchElementException:
                 # 尝试使用_find_element_with_retry方法
                 try:
                     portfolio_button = self._find_element_with_retry(
@@ -3252,7 +3251,7 @@ class CryptoTrader:
                 find_portfolio_coin_button = self.driver.find_element(By.XPATH, XPathConfig.FIND_PORTFOLIO_COIN_BUTTON)
                 find_portfolio_coin_button.click()
                 
-            except Exception as e: 
+            except NoSuchElementException:
                 # 尝试使用_find_element_with_retry方法
                 try:
                     find_portfolio_coin_button = self._find_element_with_retry(
@@ -3475,7 +3474,7 @@ class CryptoTrader:
                 # 使用确定的XPath查找搜索框
                 try:
                     search_box = self.driver.find_element(By.XPATH, XPathConfig.SEARCH_INPUT)
-                except Exception as e:
+                except NoSuchElementException:
                     search_box = self._find_element_with_retry(
                         XPathConfig.SEARCH_INPUT,
                         timeout=3,
@@ -3499,7 +3498,7 @@ class CryptoTrader:
                     search_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.SEARCH_CONFIRM_BUTTON)
                     self.logger.info(f"点击SEARCH_CONFIRM_BUTTON按钮: {search_confirm_button}")
                     search_confirm_button.click()
-                except Exception as e: 
+                except NoSuchElementException:
                     # 尝试使用_find_element_with_retry方法
                     try:
                         search_confirm_button = self._find_element_with_retry(
