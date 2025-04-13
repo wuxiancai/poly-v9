@@ -953,7 +953,7 @@ class CryptoTrader:
 
                 # 点击登录按钮
                 try:
-                    login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON)
+                    login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON[0])
                     login_button.click()
                 except Exception as e:
                     login_button = self._find_element_with_retry(
@@ -1078,18 +1078,20 @@ class CryptoTrader:
             try:
                 # 取Portfolio值
                 try:
-                    portfolio_element = self.driver.find_element(By.XPATH, XPathConfig.PORTFOLIO_VALUE)
+                    portfolio_element = self.driver.find_element(By.XPATH, XPathConfig.PORTFOLIO_VALUE[0])
                     self.portfolio_value = portfolio_element.text
+                    
                 except NoSuchElementException:
-                    portfolio_element = self._find_element_with_retry(XPathConfig.PORTFOLIO_VALUE)
+                    portfolio_element = self._find_element_with_retry(XPathConfig.PORTFOLIO_VALUE[0])
                     self.portfolio_value = portfolio_element.text
             
                 # 获取Cash值
                 try:
-                    cash_element = self.driver.find_element(By.XPATH, XPathConfig.CASH_VALUE)
+                    cash_element = self.driver.find_element(By.XPATH, XPathConfig.CASH_VALUE[0])
                     self.cash_value = cash_element.text
+                    
                 except NoSuchElementException:
-                    cash_element = self._find_element_with_retry(XPathConfig.CASH_VALUE)
+                    cash_element = self._find_element_with_retry(XPathConfig.CASH_VALUE[0])
                     self.cash_value = cash_element.text
                 
                 # 更新Portfolio和Cash显示
@@ -1112,8 +1114,8 @@ class CryptoTrader:
                 self.root.after(3000, self.check_balance)
         except Exception as e:
             self.logger.error(f"检查资金失败: {str(e)}")
-            
-            time.sleep(2)    
+            time.sleep(2)   
+             
     """以上代码执行了监控价格和获取 CASH 的值。从这里开始程序返回到第 740 行"""  
 
     """以下代码是设置 YES/NO 金额的函数,直到第 1127 行"""
@@ -1352,7 +1354,7 @@ class CryptoTrader:
         """查找登录按钮"""
         # 使用静默模式查找元素，并添加空值检查
         try:
-            login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON)
+            login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON[0])
         except NoSuchElementException:
             login_button = self._find_element_with_retry(
                 XPathConfig.LOGIN_BUTTON,
@@ -1425,7 +1427,7 @@ class CryptoTrader:
             
             # 点击登录按钮
             try:
-                login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON)
+                login_button = self.driver.find_element(By.XPATH, XPathConfig.LOGIN_BUTTON[0])
                 login_button.click()
             except NoSuchElementException:
                 login_button = self._find_element_with_retry(
@@ -1460,7 +1462,7 @@ class CryptoTrader:
         try:
             # 等待输入框可交互
             try:
-                amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT)
+                amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT[0])
             except NoSuchElementException:
                 amount_input = self._find_element_with_retry(
                     XPathConfig.AMOUNT_INPUT,
@@ -1640,6 +1642,17 @@ class CryptoTrader:
                             self.no2_price_entry.insert(0, str(self.default_target_price))
                             self.no2_price_entry.configure(foreground='red')  # 添加红色设置
 
+                            if '--restart' in sys.argv:
+                                # 设置 Yes5和No5价格为0.98
+                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
+                                self.yes5_price_entry.delete(0, tk.END)
+                                self.yes5_price_entry.insert(0, "0.98")
+                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
+                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
+                                self.no5_price_entry.delete(0, tk.END)
+                                self.no5_price_entry.insert(0, "0.98")
+                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+
                             # 设置 Yes5和No5价格为0.85
                             self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                             self.yes5_price_entry.delete(0, tk.END)
@@ -1700,6 +1713,17 @@ class CryptoTrader:
                             self.yes2_price_entry.delete(0, tk.END)
                             self.yes2_price_entry.insert(0, str(self.default_target_price))
                             self.yes2_price_entry.configure(foreground='red')  # 添加红色设置
+
+                            if '--restart' in sys.argv:
+                                # 设置 Yes5和No5价格为0.98
+                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
+                                self.yes5_price_entry.delete(0, tk.END)
+                                self.yes5_price_entry.insert(0, "0.98")
+                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
+                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
+                                self.no5_price_entry.delete(0, tk.END)
+                                self.no5_price_entry.insert(0, "0.98")
+                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
 
                             # 设置 Yes5和No5价格为0.85
                             self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
@@ -2067,6 +2091,17 @@ class CryptoTrader:
                             self.no4_price_entry.insert(0, "0.00")
 
                             """当买了 4次后预防第 5 次反水，所以价格到了 50 时就平仓，然后再自动开"""
+                            if '--restart' in sys.argv:
+                                # 设置 Yes5价格为 0.98和No5价格为0.5
+                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
+                                self.yes5_price_entry.delete(0, tk.END)
+                                self.yes5_price_entry.insert(0, "0.98")
+                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
+                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
+                                self.no5_price_entry.delete(0, tk.END)
+                                self.no5_price_entry.insert(0, "0.5")
+                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+
                             # 设置 Yes5和No5价格为0.85
                             self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                             self.yes5_price_entry.delete(0, tk.END)
@@ -2119,6 +2154,17 @@ class CryptoTrader:
                             self.no4_price_entry.insert(0, "0.00")
 
                             """当买了 4次后预防第 5 次反水，所以价格到了 50 时就平仓，然后再自动开"""
+                            if '--restart' in sys.argv:
+                                # 设置 Yes5价格为 0.5和No5价格为0.98
+                                self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
+                                self.yes5_price_entry.delete(0, tk.END)
+                                self.yes5_price_entry.insert(0, "0.5")
+                                self.yes5_price_entry.configure(foreground='red')  # 添加红色设置
+                                self.no5_price_entry = self.no_frame.grid_slaves(row=8, column=1)[0]
+                                self.no5_price_entry.delete(0, tk.END)
+                                self.no5_price_entry.insert(0, "0.98")
+                                self.no5_price_entry.configure(foreground='red')  # 添加红色设置
+
                             # 设置 Yes5和No5价格为0.85
                             self.yes5_price_entry = self.yes_frame.grid_slaves(row=8, column=1)[0]
                             self.yes5_price_entry.delete(0, tk.END)
@@ -2451,7 +2497,7 @@ class CryptoTrader:
             if position_value == "Yes":
                 # 如果第一行是Yes，点击第二的按钮
                 try:
-                    button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_NO_BUTTON)
+                    button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_NO_BUTTON[0])
                 except NoSuchElementException:
                     button = self._find_element_with_retry(
                         XPathConfig.POSITION_SELL_NO_BUTTON,
@@ -2461,7 +2507,7 @@ class CryptoTrader:
             else:
                 # 如果第一行不存在或不是Yes，使用默认的第一行按钮
                 try:
-                    button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_BUTTON)
+                    button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_BUTTON[0])
                 except NoSuchElementException:
                     button = self._find_element_with_retry(
                         XPathConfig.POSITION_SELL_BUTTON,
@@ -2492,7 +2538,7 @@ class CryptoTrader:
             if position_value == "No":
                 # 如果第二行是No，点击第一行YES 的 SELL的按钮
                 try:
-                    button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_YES_BUTTON)
+                    button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_YES_BUTTON[0])
                 except NoSuchElementException:
                     button = self._find_element_with_retry(
                         XPathConfig.POSITION_SELL_YES_BUTTON,
@@ -2502,7 +2548,7 @@ class CryptoTrader:
             else:
                 # 如果第二行不存在或不是No，使用默认的第一行按钮
                 try:
-                    button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_BUTTON)
+                    button = self.driver.find_element(By.XPATH, XPathConfig.POSITION_SELL_BUTTON[0])
                 except NoSuchElementException:
                     button = self._find_element_with_retry(
                         XPathConfig.POSITION_SELL_BUTTON,
@@ -2524,7 +2570,7 @@ class CryptoTrader:
                 self.restart_browser()
             # 点击Sell-卖出按钮
             try:
-                sell_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.SELL_CONFIRM_BUTTON)
+                sell_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.SELL_CONFIRM_BUTTON[0])
             except NoSuchElementException:
                 sell_confirm_button = self._find_element_with_retry(
                     XPathConfig.SELL_CONFIRM_BUTTON,
@@ -2543,7 +2589,7 @@ class CryptoTrader:
             if not self.driver:
                 self.restart_browser()
             try:
-                button = self.driver.find_element(By.XPATH, XPathConfig.BUY_BUTTON)
+                button = self.driver.find_element(By.XPATH, XPathConfig.BUY_BUTTON[0])
             except NoSuchElementException:
                 button = self._find_element_with_retry(
                     XPathConfig.BUY_BUTTON,
@@ -2563,7 +2609,7 @@ class CryptoTrader:
                 self.restart_browser()
             
             try:
-                button = self.driver.find_element(By.XPATH, XPathConfig.BUY_YES_BUTTON)
+                button = self.driver.find_element(By.XPATH, XPathConfig.BUY_YES_BUTTON[0])
             except NoSuchElementException:
                 button = self._find_element_with_retry(
                     XPathConfig.BUY_YES_BUTTON,
@@ -2582,7 +2628,7 @@ class CryptoTrader:
             if not self.driver:
                 self.restart_browser()
             try:
-                button = self.driver.find_element(By.XPATH, XPathConfig.BUY_NO_BUTTON)
+                button = self.driver.find_element(By.XPATH, XPathConfig.BUY_NO_BUTTON[0])
             except NoSuchElementException:
                 button = self._find_element_with_retry(
                     XPathConfig.BUY_NO_BUTTON,
@@ -2606,7 +2652,7 @@ class CryptoTrader:
             button_text = button.cget("text")
             # 找到输入框
             try:
-                amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT)
+                amount_input = self.driver.find_element(By.XPATH, XPathConfig.AMOUNT_INPUT[0])
             except NoSuchElementException:
                 amount_input = self._find_element_with_retry(
                     XPathConfig.AMOUNT_INPUT,
@@ -2662,7 +2708,7 @@ class CryptoTrader:
             if not self.driver:
                 self.restart_browser()            # 等待并检查是否存在 Yes 交易记录
             try:
-                yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
+                yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY[0])
             except NoSuchElementException:
                 yes_element = self._find_element_with_retry(
                     XPathConfig.HISTORY,
@@ -2697,7 +2743,7 @@ class CryptoTrader:
                 self.restart_browser()
             # 等待并检查是否存在 No 标签
             try:
-                no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
+                no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY[0])
             except NoSuchElementException:
                 no_element = self._find_element_with_retry(
                     XPathConfig.HISTORY,
@@ -2724,7 +2770,7 @@ class CryptoTrader:
     def position_yes_cash(self):
         """获取当前持仓YES的金额"""
         try:
-            yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
+            yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY[0])
         except NoSuchElementException:
             yes_element = self._find_element_with_retry(
                 XPathConfig.HISTORY,
@@ -2740,7 +2786,7 @@ class CryptoTrader:
     def position_no_cash(self):
         """获取当前持仓NO的金额"""
         try:
-            no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
+            no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY[0])
         except NoSuchElementException:
             no_element = self._find_element_with_retry(
                 XPathConfig.HISTORY,
@@ -2762,7 +2808,7 @@ class CryptoTrader:
             if not self.driver:
                 self.restart_browser()            # 等待并检查是否存在 Yes 交易记录
             try:
-                yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
+                yes_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY[0])
             except NoSuchElementException:
                 yes_element = self._find_element_with_retry(
                     XPathConfig.HISTORY,
@@ -2796,7 +2842,7 @@ class CryptoTrader:
             if not self.driver:
                 self.restart_browser()            # 等待并检查是否存在 No 交易记录
             try:
-                no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY)
+                no_element = self.driver.find_element(By.XPATH, XPathConfig.HISTORY[0])
             except NoSuchElementException:
                 no_element = self._find_element_with_retry(
                     XPathConfig.HISTORY,
@@ -3054,7 +3100,7 @@ class CryptoTrader:
                 
                 # 尝试获取YES标签
                 try:
-                    position_label_yes = self.driver.find_element(By.XPATH, XPathConfig.POSITION_YES_LABEL)
+                    position_label_yes = self.driver.find_element(By.XPATH, XPathConfig.POSITION_YES_LABEL[0])
                     if position_label_yes:
                         self.logger.info(f"找到了Yes持仓标签: {position_label_yes.text}")
                         return True
@@ -3100,7 +3146,7 @@ class CryptoTrader:
                 
                 # 尝试获取NO标签
                 try:
-                    position_label_no = self.driver.find_element(By.XPATH, XPathConfig.POSITION_NO_LABEL)
+                    position_label_no = self.driver.find_element(By.XPATH, XPathConfig.POSITION_NO_LABEL[0])
                     self.logger.info(f"找到了No持仓标签: {position_label_no.text}")
                     return True
                     
@@ -3225,7 +3271,7 @@ class CryptoTrader:
 
             # 有持仓,点击 PORTFOLIO_BUTTON按钮,打开币对
             try: 
-                portfolio_button = self.driver.find_element(By.XPATH, XPathConfig.PORTFOLIO_BUTTON)
+                portfolio_button = self.driver.find_element(By.XPATH, XPathConfig.PORTFOLIO_BUTTON[0])
                 portfolio_button.click()
                 time.sleep(1)
             except NoSuchElementException:
@@ -3248,7 +3294,7 @@ class CryptoTrader:
                 
             # 点击 FIND_PORTFOLIO_COIN_BUTTON按钮,打开持仓详情页
             try:
-                find_portfolio_coin_button = self.driver.find_element(By.XPATH, XPathConfig.FIND_PORTFOLIO_COIN_BUTTON)
+                find_portfolio_coin_button = self.driver.find_element(By.XPATH, XPathConfig.FIND_PORTFOLIO_COIN_BUTTON[0])
                 find_portfolio_coin_button.click()
                 
             except NoSuchElementException:
@@ -3473,7 +3519,7 @@ class CryptoTrader:
             try:
                 # 使用确定的XPath查找搜索框
                 try:
-                    search_box = self.driver.find_element(By.XPATH, XPathConfig.SEARCH_INPUT)
+                    search_box = self.driver.find_element(By.XPATH, XPathConfig.SEARCH_INPUT[0])
                 except NoSuchElementException:
                     search_box = self._find_element_with_retry(
                         XPathConfig.SEARCH_INPUT,
@@ -3495,7 +3541,7 @@ class CryptoTrader:
                 
                 try:
                     # 点击 seach_confirm_button按钮 
-                    search_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.SEARCH_CONFIRM_BUTTON)
+                    search_confirm_button = self.driver.find_element(By.XPATH, XPathConfig.SEARCH_CONFIRM_BUTTON[0])
                     self.logger.info(f"点击SEARCH_CONFIRM_BUTTON按钮: {search_confirm_button}")
                     search_confirm_button.click()
                 except NoSuchElementException:
