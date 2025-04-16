@@ -1082,7 +1082,8 @@ class CryptoTrader:
                     self.portfolio_value = portfolio_element.text
                     
                 except NoSuchElementException:
-                    portfolio_element = self._find_element_with_retry(XPathConfig.PORTFOLIO_VALUE[0])
+                    portfolio_element = self._find_element_with_retry(XPathConfig.PORTFOLIO_VALUE, timeout=3,
+                silent=True)
                     self.portfolio_value = portfolio_element.text
             
                 # 获取Cash值
@@ -1091,7 +1092,7 @@ class CryptoTrader:
                     self.cash_value = cash_element.text
                     
                 except NoSuchElementException:
-                    cash_element = self._find_element_with_retry(XPathConfig.CASH_VALUE[0])
+                    cash_element = self._find_element_with_retry(XPathConfig.CASH_VALUE, timeout=3,silent=True)
                     self.cash_value = cash_element.text
                 
                 # 更新Portfolio和Cash显示
